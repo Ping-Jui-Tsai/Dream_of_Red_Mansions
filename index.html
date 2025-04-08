@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>紅樓夢角色心理測驗，你最像紅樓夢的什麼角色?</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: "Microsoft JhengHei", sans-serif;
+      background-color: #fff8f0;
+      color: #333;
+      text-align: center;
+      padding: 2em;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 2em;
+      border-radius: 1em;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #a52a2a;
+    }
+    .question {
+      font-size: 1.2em;
+      margin: 1em 0;
+    }
+    .option {
+      display: block;
+      margin: 0.5em auto;
+      padding: 1em;
+      background: #f0e0d6;
+      border: none;
+      border-radius: 0.5em;
+      font-size: 1em;
+      cursor: pointer;
+      width: 80%;
+      text-align: center;
+    }
+    .option:hover {
+      background: #e8d3c1;
+    }
+    #result {
+      font-size: 1.3em;
+      margin-top: 2em;
+      color: #8b0000;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>紅樓夢角色心理測驗，你最像紅樓夢的什麼角色?</h1>
+    <div id="quiz"></div>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        q: "1. 你的經濟狀況?",
+        options: [
+          { text: "富裕", roles: ["賈寶玉", "王熙鳳"] },
+          { text: "小康", roles: ["薛寶釵", "探春"] },
+          { text: "貧窮", roles: ["劉姥姥"] }
+        ]
+      },
+      {
+        q: "在班上莫名其妙被老師罵，你會.......？",
+        options: [
+          { text: "A. 嗆回去", roles: ["賈寶玉","探春"] },
+          { text: "B. 躲起來哭", roles: ["林黛玉"] },
+          { text: "C. 乖乖聽訓", roles: ["薛寶釵", "迎春"] },
+          { text: "D. 當作沒聽到", roles: ["惜春", "妙玉"] }
+        ]
+      },
+      {
+        q: "聽到他人在背後講你的壞話，你會......？",
+        options: [
+          { text: "A. 跑到他們面前質問他們在講什麼", roles: ["史湘雲"] },
+          { text: "B. 裝做沒事，跑到無人的地方暗自神傷", roles: ["林黛玉"] },
+          { text: "C. 裝做沒事，背地裡安排復仇計畫，講他們的壞話", roles: ["王熙鳳","薛寶釵"] },
+          { text: "D. 我需要在乎他們嗎？？", roles: ["妙玉"] }
+        ]
+      },
+      {
+        q: "國文段考成績出爐，繞教室一圈發現只有自己不及格，你會......？",
+        options: [
+          { text: "A. 情感的真實與深度", roles: ["賈寶玉"] },
+          { text: "B. 穩定與安全的生活", roles: ["李紈"] },
+          { text: "C. 自由與自己決定的空間", roles: ["妙玉"] },
+          { text: "D. 傳統與規矩的維持", roles: ["襲人"] }
+        ]
+      },
+      {
+        q: "當你看到Andy老師的錢被家寧A走時，作為Andy老師的朋友，你會......？",
+        options: [
+          { text: "A. 默默在心裡可憐他", roles: ["林黛玉"] },
+          { text: "B. 安慰他說「ㄚ算了沒關係啦，我們再想想有甚麼辦法」", roles: ["薛寶釵"] },
+          { text: "C. 衝去找家寧理論，期待以法律途徑追求公平正義", roles: ["史湘雲"] },
+          { text: "D. 暗中聯絡黑手黨，使她付出代價", roles: ["王熙鳳"] }
+        ]
+      },
+      {
+        q: "你喜歡數學的哪個單元?",
+        options: [
+          { text: "A. 你以為都會對的排組", roles: ["王熙鳳"] },
+          { text: "B. 計算繁瑣的統計", roles: ["探春"] },
+          { text: "C. 不知道答案是幹嘛的向量", roles: ["妙玉"] },
+          { text: "D. 「數學是什麼，能吃嗎」不想讀數學", roles: ["賈寶玉","迎春"] }
+        ]
+      },
+      {
+        q: "你在意他人的看法嗎？",//還沒改
+        options: [
+          { text: "A. 很在意，容易受影響", roles: ["林黛玉"] },
+          { text: "B. 還好，只在意重要人的看法", roles: ["探春"] },
+          { text: "C. 不太在意，我有我自己的想法", roles: ["賈寶玉"] },
+          { text: "D. 會聽參考，但不會左右我", roles: ["王熙鳳"] }
+        ]
+      },
+      {
+        q: "你與人相處的態度偏？",
+        options: [
+          { text: "A. 感情導向，重情重義", roles: ["賈寶玉"] },
+          { text: "B. 理性互動，講求界線", roles: ["妙玉"] },
+          { text: "C. 看對方是誰，有彈性調整", roles: ["薛寶釵"] },
+          { text: "D. 樂於交流但會保留私心", roles: ["王熙鳳"] }
+        ]
+      },
+      {
+        q: "你喜歡什麼樣的生活？",
+        options: [
+          { text: "A. 充滿詩意與情感的生活", roles: ["林黛玉"] },
+          { text: "B. 有規劃、穩定的日常", roles: ["李紈"] },
+          { text: "C. 持續挑戰與進步的生活", roles: ["探春"] },
+          { text: "D. 有熱鬧與人情味的環境", roles: ["史湘雲"] }
+        ]
+      },
+      {
+        q: "你對未來的態度是？",
+        options: [
+          { text: "A. 順其自然，隨遇而安", roles: ["賈寶玉"] },
+          { text: "B. 有計畫、按步就班前進", roles: ["薛寶釵"] },
+          { text: "C. 不確定，但會努力嘗試", roles: ["王熙鳳"] },
+          { text: "D. 未來太遠，想當下快樂", roles: ["林黛玉"] }
+        ]
+      },
+      {
+        q: "你怎麼處理壓力？",
+        options: [
+          { text: "A. 用藝術、寫作或音樂釋放情緒", roles: ["林黛玉"] },
+          { text: "B. 找人討論與分析問題", roles: ["探春"] },
+          { text: "C. 做運動或勞動讓身體放鬆", roles: ["史湘雲"] },
+          { text: "D. 埋頭工作或閱讀轉移注意力", roles: ["妙玉"] }
+        ]
+      }
+    ];
+
+    const scores = {};
+    const quizDiv = document.getElementById('quiz');
+    let currentQ = 0;
+
+    function showQuestion() {
+      quizDiv.innerHTML = '';
+      if (currentQ >= questions.length) {
+        showResult();
+        return;
+      }
+      const qData = questions[currentQ];
+      const qText = document.createElement('div');
+      qText.className = 'question';
+      qText.textContent = `第 ${currentQ + 1} 題：${qData.q}`;
+      quizDiv.appendChild(qText);
+
+      qData.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'option';
+        btn.textContent = opt.text;
+        btn.onclick = () => {
+          opt.roles.forEach(role => {
+            scores[role] = (scores[role] || 0) + 1;
+          });
+          currentQ++;
+          showQuestion();
+        };
+        quizDiv.appendChild(btn);
+      });
+    }
+
+    function showResult() {
+      let topRole = null;
+      let max = 0;
+      for (const [role, score] of Object.entries(scores)) {
+        if (score > max) {
+          max = score;
+          topRole = role;
+        }
+      }
+      const result = document.getElementById('result');
+      result.innerHTML = `你最像：<strong>${topRole}</strong>！<br><br>${getRoleDescription(topRole)}`;
+    }
+
+    function getRoleDescription(role) {
+      const desc = {
+        "林黛玉": "多愁善感、清高、孤傲、堅持自己的理想、文學涵養",
+        "薛寶釵": "圓融處世、在意他人看法、心機",
+        "王熙鳳": "精明能幹、奸狠毒辣、手腕靈活(討好上級、對下嚴厲)",
+        "賈寶玉": "情感豐富、叛逆、理想主義、任性",
+        "史湘雲": "活潑開朗、豪爽、正義",
+        "探春": "理家才能、捍衛自己的權益",
+        "妙玉": "高潔、孤僻、自我感覺良好、其實沒看破紅塵",
+        "迎春": "懦弱、怕麻煩、逃避",
+        "惜春": "冷漠、自全期身",
+        "劉姥姥": "處世圓滑、深諳世事(有點窮...?)"
+      };
+      return desc[role] || '';
+    }
+
+    showQuestion();
+  </script>
+</body>
+</html>
