@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
-  <title>紅樓夢角色心理測驗，你最像紅樓夢的什麼角色?</title>
+  <title>紅樓夢角色心理測驗</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
@@ -63,16 +63,16 @@
         options: [
           { text: "富裕", roles: ["賈寶玉", "王熙鳳"] },
           { text: "小康", roles: ["薛寶釵", "探春"] },
-          { text: "貧窮", roles: ["劉姥姥"] }
+          { text: "貧窮", roles: ["劉姥姥"], isEnd: true }
         ]
       },
       {
         q: "在班上莫名其妙被老師罵，你會.......？",
         options: [
-          { text: "A. 嗆回去", roles: ["賈寶玉","探春"] },
-          { text: "B. 躲起來哭", roles: ["林黛玉"] },
-          { text: "C. 乖乖聽訓", roles: ["薛寶釵", "迎春"] },
-          { text: "D. 當作沒聽到", roles: ["惜春", "妙玉"] }
+          { text: "嗆回去", roles: ["賈寶玉","探春"] },
+          { text: "躲起來哭", roles: ["林黛玉"] },
+          { text: "乖乖聽訓", roles: ["薛寶釵", "迎春"] },
+          { text: "當作沒聽到", roles: ["惜春", "妙玉"] }
         ]
       },
       {
@@ -110,64 +110,23 @@
           { text: "C. 不知道答案是幹嘛的向量", roles: ["妙玉"] },
           { text: "D. 「數學是什麼，能吃嗎」不想讀數學", roles: ["賈寶玉","迎春"] }
         ]
-      },
-      {
-        q: "你在意他人的看法嗎？",//還沒改
-        options: [
-          { text: "A. 很在意，容易受影響", roles: ["林黛玉"] },
-          { text: "B. 還好，只在意重要人的看法", roles: ["探春"] },
-          { text: "C. 不太在意，我有我自己的想法", roles: ["賈寶玉"] },
-          { text: "D. 會聽參考，但不會左右我", roles: ["王熙鳳"] }
-        ]
-      },
-      {
-        q: "你與人相處的態度偏？",
-        options: [
-          { text: "A. 感情導向，重情重義", roles: ["賈寶玉"] },
-          { text: "B. 理性互動，講求界線", roles: ["妙玉"] },
-          { text: "C. 看對方是誰，有彈性調整", roles: ["薛寶釵"] },
-          { text: "D. 樂於交流但會保留私心", roles: ["王熙鳳"] }
-        ]
-      },
-      {
-        q: "你喜歡什麼樣的生活？",
-        options: [
-          { text: "A. 充滿詩意與情感的生活", roles: ["林黛玉"] },
-          { text: "B. 有規劃、穩定的日常", roles: ["李紈"] },
-          { text: "C. 持續挑戰與進步的生活", roles: ["探春"] },
-          { text: "D. 有熱鬧與人情味的環境", roles: ["史湘雲"] }
-        ]
-      },
-      {
-        q: "你對未來的態度是？",
-        options: [
-          { text: "A. 順其自然，隨遇而安", roles: ["賈寶玉"] },
-          { text: "B. 有計畫、按步就班前進", roles: ["薛寶釵"] },
-          { text: "C. 不確定，但會努力嘗試", roles: ["王熙鳳"] },
-          { text: "D. 未來太遠，想當下快樂", roles: ["林黛玉"] }
-        ]
-      },
-      {
-        q: "你怎麼處理壓力？",
-        options: [
-          { text: "A. 用藝術、寫作或音樂釋放情緒", roles: ["林黛玉"] },
-          { text: "B. 找人討論與分析問題", roles: ["探春"] },
-          { text: "C. 做運動或勞動讓身體放鬆", roles: ["史湘雲"] },
-          { text: "D. 埋頭工作或閱讀轉移注意力", roles: ["妙玉"] }
-        ]
       }
     ];
 
     const scores = {};
     const quizDiv = document.getElementById('quiz');
+    const result = document.getElementById('result');
     let currentQ = 0;
 
     function showQuestion() {
       quizDiv.innerHTML = '';
+      result.innerHTML = '';
+
       if (currentQ >= questions.length) {
         showResult();
         return;
       }
+
       const qData = questions[currentQ];
       const qText = document.createElement('div');
       qText.className = 'question';
@@ -182,7 +141,11 @@
           opt.roles.forEach(role => {
             scores[role] = (scores[role] || 0) + 1;
           });
-          currentQ++;
+          if (currentQ === 0 && opt.isEnd) {
+            currentQ = questions.length; // 直接跳到結束
+          } else {
+            currentQ++;
+          }
           showQuestion();
         };
         quizDiv.appendChild(btn);
@@ -190,6 +153,7 @@
     }
 
     function showResult() {
+      quizDiv.innerHTML = ''; // 移除所有按鈕
       let topRole = null;
       let max = 0;
       for (const [role, score] of Object.entries(scores)) {
@@ -198,8 +162,19 @@
           topRole = role;
         }
       }
-      const result = document.getElementById('result');
+
       result.innerHTML = `你最像：<strong>${topRole}</strong>！<br><br>${getRoleDescription(topRole)}`;
+
+      const restartBtn = document.createElement('button');
+      restartBtn.textContent = '重新開始';
+      restartBtn.className = 'option';
+      restartBtn.onclick = () => {
+        currentQ = 0;
+        for (let key in scores) delete scores[key];
+        result.innerHTML = '';
+        showQuestion();
+      };
+      quizDiv.appendChild(restartBtn);
     }
 
     function getRoleDescription(role) {
