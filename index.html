@@ -43,7 +43,7 @@
       background: #e8d3c1;
     }
     #result {
-      font-size: 1.3em;
+      font-size: 1.1em;
       margin-top: 2em;
       color: #8b0000;
     }
@@ -110,6 +110,42 @@
           { text: "C. 不知道答案是幹嘛的向量", roles: ["妙玉"] },
           { text: "D. 「數學是什麼，能吃嗎」不想讀數學", roles: ["賈寶玉","迎春"] }
         ]
+      },
+      {
+        q: "佩玹說她喜歡看論文，你會說你喜歡看甚麼書呢？",
+        options: [
+          { text: "A. 名字很酷的小說超有吸引力的", roles: ["史湘雲"] },
+          { text: "B. 我喜歡看愛情小說(只講這個)，尤其是表現在身體交錯上的心靈交流(但這我不會講)，表現自己很單純", roles: ["迎春"] },
+          { text: "C. 那種描述社會不公的小說我真的超有感啦", roles: ["探春"] },
+          { text: "D. 喜歡靜觀悲劇的視角", roles: ["惜春"] }
+        ]
+      },
+      {
+        q: "你最喜歡下列哪句話的看法？",
+        options: [
+          { text: "A. 人生得意須盡歡，莫使金樽空對月", roles: ["賈寶玉"] },
+          { text: "B. 林花謝了春紅，太匆匆。無奈朝來寒雨，晚來風。 胭脂淚，相留醉，幾時重。自是人生長恨，水長東。", roles: ["迎春"] },
+          { text: "C. 若無閒事掛心頭，便是人間好時節", roles: ["史湘雲"] },
+          { text: "D. 人生在世不稱意，明朝散髮弄扁舟", roles: ["妙玉"] }
+        ]
+      },
+      {
+        q: "英豪突然要給你3000元，並要求你要在今天睡覺前花完，你會......？",
+        options: [
+          { text: "A. 請自己好好吃一頓美味的精緻奢華大餐", roles: ["惜春"] },
+          { text: "B. 請班上同學一人一杯星巴克買一送一", roles: ["薛寶釵"] },
+          { text: "C. 找好朋友去看電影，並吃爆貴貴的爆米花", roles: ["妙玉"] },
+          { text: "D. 買醉喜歡的動漫或偶像的周邊", roles: ["王熙鳳","探春"] }
+        ]
+      },
+      {
+        q: "有人拿到英豪的錢後請大家喝飲料，你會......？",
+        options: [
+          { text: "A. 發限動分享，開心全寫在臉和行為上", roles: ["賈寶玉"] },
+          { text: "B. 雖然收到很開心，但怕欠人情還是推辭一下", roles: ["林黛玉"] },
+          { text: "C. 私下偷酸送的人怎麼得到英豪的錢的", roles: ["王熙鳳"] },
+          { text: "D. 說謝謝後默默收下", roles: ["惜春"] }
+        ]
       }
     ];
 
@@ -142,7 +178,7 @@
             scores[role] = (scores[role] || 0) + 1;
           });
           if (currentQ === 0 && opt.isEnd) {
-            currentQ = questions.length; // 直接跳到結束
+            currentQ = questions.length;
           } else {
             currentQ++;
           }
@@ -153,7 +189,8 @@
     }
 
     function showResult() {
-      quizDiv.innerHTML = ''; // 移除所有按鈕
+      quizDiv.innerHTML = '';
+
       let topRole = null;
       let max = 0;
       for (const [role, score] of Object.entries(scores)) {
@@ -163,7 +200,7 @@
         }
       }
 
-      result.innerHTML = `你最像：<strong>${topRole}</strong>！<br><br>${getRoleDescription(topRole)}`;
+      result.innerHTML = `你最像：<strong>${topRole}</strong>！<br><br>${getRoleDescription(topRole)}<br><br>`;
 
       const restartBtn = document.createElement('button');
       restartBtn.textContent = '重新開始';
@@ -188,9 +225,11 @@
         "妙玉": "高潔、孤僻、自我感覺良好、其實沒看破紅塵",
         "迎春": "懦弱、怕麻煩、逃避",
         "惜春": "冷漠、自全期身",
-        "劉姥姥": "處世圓滑、深諳世事(有點窮...?)"
+        "劉姥姥": "處世圓滑、深諳世事(有點窮...?)",
+        "李紈": "穩重實際、低調內斂、以家庭為重",
+        "襲人": "守規矩、忠心、服從安排"
       };
-      return desc[role] || '';
+      return desc[role] || "這個角色還沒有說明喔！";
     }
 
     showQuestion();
